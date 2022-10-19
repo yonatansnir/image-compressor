@@ -5,7 +5,7 @@ export function getImageSize(size: number, fixed = 2) {
 export function getResizedPx(
   width: number,
   height: number,
-  maxResolution = 1000
+  maxResolution = 600
 ) {
   if (width < maxResolution && height < maxResolution)
     return {
