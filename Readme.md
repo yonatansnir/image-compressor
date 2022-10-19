@@ -1,0 +1,1 @@
+# Client Based Image Compressor

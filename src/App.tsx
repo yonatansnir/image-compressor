@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef, useState } from "react";
-import { getImageSize } from "./utils";
+import { getImageSize, getResizedPx } from "./utils";
 import "./index.css";
 
 function App() {
@@ -15,13 +15,12 @@ function App() {
     image.src = objectURL;
     image.onload = function () {
       if (!canvasRef.current) return;
-      const { width, height } = image;
-      console.log(width, height);
-      canvasRef.current.width = 500;
-      canvasRef.current.height = 500;
+      const { width, height } = getResizedPx(image.width, image.height);
+      canvasRef.current.width = Number(width);
+      canvasRef.current.height = Number(height);
       const ctx = canvasRef.current.getContext("2d");
       if (!ctx) return;
-      ctx.drawImage(image, 0, 0, 500, 500);
+      ctx.drawImage(image, 0, 0, Number(width), Number(height));
       URL.revokeObjectURL(objectURL);
     };
   };
