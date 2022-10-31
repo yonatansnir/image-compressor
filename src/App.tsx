@@ -7,6 +7,7 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const anchorRef = useRef<HTMLAnchorElement | null>(null);
 
+  /* File draw via ObjectURL API */
   const handleFileDraw = (e: ChangeEvent<HTMLInputElement>) => {
     const fileItem = e.target.files?.item(0);
     if (!fileItem) return;
@@ -23,6 +24,30 @@ function App() {
       if (!ctx) return;
       ctx.drawImage(image, 0, 0, Number(width), Number(height));
       URL.revokeObjectURL(objectURL);
+    };
+  };
+
+  /* File draw via FileReader API */
+  const handleFileDraw2 = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileItem = e.target.files?.item(0);
+    if (!fileItem) return;
+    setFileSize(fileItem.size);
+    const reader = new FileReader();
+    reader.readAsDataURL(fileItem);
+    reader.onloadend = function (e) {
+      const result = e.target?.result;
+      if (typeof result !== "string") return;
+      const image = new Image();
+      image.src = result;
+      image.onload = function () {
+        if (!canvasRef.current) return;
+        const { width, height } = getResizedPx(image.width, image.height);
+        canvasRef.current.width = Number(width);
+        canvasRef.current.height = Number(height);
+        const ctx = canvasRef.current.getContext("2d");
+        if (!ctx) return;
+        ctx.drawImage(image, 0, 0, Number(width), Number(height));
+      };
     };
   };
 
